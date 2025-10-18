@@ -1,0 +1,7 @@
+services:
+
+  ai-runner:
+    provider:
+      type: model
+      options:
+        model: ai/llama3.2:3B-Q4_K_M
