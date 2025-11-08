@@ -14,11 +14,13 @@ import static java.lang.System.exit;
 public class MusicianAssistant {
     public static void main(String[] args) {
         String name = args[0];
-        String url = "http://localhost:12434/engines/llama.cpp/v1";
+
+        String BASE_URL = System.getProperty("BASE_URL");
+        String MODEL = System.getProperty("MODEL");
 
         ChatModel model = OpenAiChatModel.builder()
-                .baseUrl(url)
-                .modelName("ai/llama3.2:3B-Q4_K_M")
+                .baseUrl(BASE_URL)
+                .modelName(MODEL)
                 .temperature(0.3)
                 .logRequests(true)
                 .logResponses(true)
