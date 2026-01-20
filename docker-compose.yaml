@@ -5,3 +5,23 @@ services:
       type: model
       options:
         model: ai/llama3.2:3B-Q4_K_M
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.4.0
+    container_name: redis-memory
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  ollama:
+    external: true

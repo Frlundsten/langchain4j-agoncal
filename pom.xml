@@ -10,11 +10,13 @@
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
-        <version.langchain4j>1.0.1</version.langchain4j>
+        <version.langchain4j>1.10.0</version.langchain4j>
         <version.tinylog>2.7.0
         </version.tinylog>
-        <version.testcontainers>1.21.0</version.testcontainers>
+        <version.testcontainers.core>2.0.3</version.testcontainers.core>
+        <version.testcontainers>1.21.4</version.testcontainers>
         <version.junit>5.13.1</version.junit>
+        <version.pdfbox>3.0.6</version.pdfbox>
         <version.exec.plugin>3.5.0</version.exec.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -38,6 +40,14 @@
             <artifactId>langchain4j-open-ai</artifactId>
         </dependency>
         <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-cohere</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.tinylog</groupId>
             <artifactId>slf4j-tinylog</artifactId>
             <version>${version.tinylog}</version>
@@ -50,8 +60,21 @@
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-ollama</artifactId>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-community-redis</artifactId>
+            <version>1.10.0-beta18</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>${version.pdfbox}</version>
+        </dependency>
+
+<!--  TEST   -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -61,7 +84,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>${version.testcontainers}</version>
+            <version>${version.testcontainers.core}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

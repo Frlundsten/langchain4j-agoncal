@@ -1,47 +1,59 @@
 package org.fredrikl;
 
-import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.community.store.memory.chat.redis.RedisChatMemoryStore;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.chat.response.ChatResponse;
-import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 
-import java.util.List;
+import java.util.Scanner;
 
 import static java.lang.System.exit;
 
 public class MusicianAssistant {
     public static void main(String[] args) {
-        String name = args[0];
 
-        String BASE_URL = System.getProperty("BASE_URL");
-        String MODEL = System.getProperty("MODEL");
+//        PracticalChatModel chatModel = new PracticalChatModel();
+//        PracticalImageModel imageModel = new PracticalImageModel();
+//        PracticalScoringModel scoringModel = new PracticalScoringModel();
+//        PracticalModerationModel moderationModel = new PracticalModerationModel();
+//
+//        chatModel.call(name);
+//        imageModel.call();
+//        scoringModel.call();
+//        moderationModel.call();
 
-        ChatModel model = OpenAiChatModel.builder()
-                .baseUrl(BASE_URL)
-                .modelName(MODEL)
-                .temperature(0.3)
-                .logRequests(true)
-                .logResponses(true)
+        ChatMemoryStore chatMemoryStore = RedisChatMemoryStore.builder()
+                .host("localhost")
+                .port(6379)
                 .build();
+        ChatMemory chatMemory = MessageWindowChatMemory.builder()
+                .maxMessages(20)
+                .chatMemoryStore(chatMemoryStore)
+                .build();
+        ChatModel model = PracticalChatModel.ollamaInstance();
 
-        Musician musician = new MusicianAssistant().generateTopThreeAlbums(model, name);
-
-        System.out.println(musician);
-        exit(0);
-    }
-
-    Musician generateTopThreeAlbums(ChatModel model,
-            String name) {
         SystemMessage systemMsg = SystemMessage.from("""
-                You are an expert in Jazz music.  Reply with only the names of the artists, albums, etc.  Be very concise.  If a list is given, separate the items with commas.
+                You are a chatbot. You speak like a pirate.
                 """);
-        UserMessage userMsg = UserMessage.from(String.format("Only list the top 3 albums of %s", name));
-        List<ChatMessage> messages = List.of(systemMsg, userMsg);
-        ChatResponse albums = model.chat(messages);
-        String topThreeAlbums = albums.aiMessage()
-                .text();
-        return new Musician(name, topThreeAlbums);
+
+        Scanner scanner = new Scanner(System.in);
+        String input = "";
+
+        while (true) {
+            System.out.println("Input question:");
+            input = scanner.nextLine();
+            if ("q".equals(input)) {
+                exit(0);
+            }
+            UserMessage userMessage = UserMessage.from(input);
+            chatMemory.add(userMessage);
+            AiMessage aiMessage = model.chat(chatMemory.messages())
+                    .aiMessage();
+            chatMemory.add(aiMessage);
+        }
     }
 }

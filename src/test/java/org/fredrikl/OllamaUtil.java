@@ -1,16 +1,23 @@
 package org.fredrikl;
 
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import org.testcontainers.ollama.OllamaContainer;
 
 import java.io.IOException;
+import java.time.Duration;
 
 /**
  * Creates an ollama container used for testing
  */
 public class OllamaUtil {
-    private OllamaUtil() {}
+    private OllamaUtil() {
+    }
+
     public static OllamaContainer createOllamaContainer(String MODEL_NAME,
             String IMAGE_NAME) throws IOException, InterruptedException {
+
+        // Do not use try-with-resource since it will shut down container...
         OllamaContainer ollama = new OllamaContainer(IMAGE_NAME)
                 .withFileSystemBind("/var/lib/docker/volumes/ollama/_data", "/root/.ollama");
 
@@ -27,5 +34,18 @@ public class OllamaUtil {
         }
 
         return ollama.withEnv("OLLAMA_MODELS", "/root/.ollama/models");
+    }
+
+    public static ChatModel createChatModel(Models model,
+            OllamaContainer ollamaContainer) {
+        return OllamaChatModel.builder()
+                .baseUrl(String.format("http://%s:%d", ollamaContainer.getHost(),
+                        ollamaContainer.getFirstMappedPort()))
+                .modelName(model.getName())
+                .temperature(0.0)
+                .timeout(Duration.ofMinutes(5))
+                .logRequests(true)
+                .logResponses(true)
+                .build();
     }
 }
