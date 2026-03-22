@@ -40,7 +40,7 @@ public class ChatModelTest {
 
     @BeforeAll
     void setUp() throws IOException, InterruptedException {
-        ollamaContainer = createOllamaContainer(model.getName(), model.getImageName());
+        ollamaContainer = createOllamaContainer(model.getName());
         modelApi = createChatModel(model, ollamaContainer);
         createDemoPDF();
     }
@@ -105,12 +105,11 @@ public class ChatModelTest {
 //    }
 
     @Test
-    void interaction() {
-
-    }
+    void interaction() {}
 
     @Test
     void summarizePDFText() throws IOException {
+        // The demo.pdf is created in the setup method
         String pdfText = extractText("stuff/demo.pdf");
 
         UserMessage userMessage = UserMessage.from(TextContent.from("Summarize the following text: " + pdfText));

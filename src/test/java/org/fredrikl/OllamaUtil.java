@@ -14,11 +14,11 @@ public class OllamaUtil {
     private OllamaUtil() {
     }
 
-    public static OllamaContainer createOllamaContainer(String MODEL_NAME,
-            String IMAGE_NAME) throws IOException, InterruptedException {
+    public static OllamaContainer createOllamaContainer(String MODEL_NAME) throws IOException, InterruptedException {
 
         // Do not use try-with-resource since it will shut down container...
-        OllamaContainer ollama = new OllamaContainer(IMAGE_NAME)
+        final String OLLAMA_IMAGE = "ollama/ollama:latest";
+        OllamaContainer ollama = new OllamaContainer(OLLAMA_IMAGE)
                 .withFileSystemBind("/var/lib/docker/volumes/ollama/_data", "/root/.ollama");
 
         ollama.start();

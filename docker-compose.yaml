@@ -1,11 +1,14 @@
 services:
 
+  #Docker model runner
   ai-runner:
     provider:
       type: model
       options:
         model: ai/llama3.2:3B-Q4_K_M
 
+
+  # Enable NVIDIA GPU acceleration for Ollama (CPU-only by default) to improve performance.
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -13,8 +16,15 @@ services:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
     restart: unless-stopped
 
+  #Currently used as a chat memory
   redis:
     image: redis:8.4.0
     container_name: redis-memory

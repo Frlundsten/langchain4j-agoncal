@@ -55,7 +55,6 @@ public class PracticalChatModel {
         return openApiInstance;
     }
 
-
     public static ChatModel ollamaInstance() {
         if (ollamaInstance == null) {
             synchronized (PracticalChatModel.class) {
@@ -111,6 +110,12 @@ public class PracticalChatModel {
         return streamingChatModel;
     }
 
+    /**
+        This method will:
+     1. Take a String as input
+     2. Connect to a model that is configured and compatible with OpenAPI
+     3. Generate an AiResponse in different ways like streaming every token one by one or return a jsonformatted (if the model allows it) response.
+     */
     public void call(String name) {
 
         ChatModel model = openApiInstance();
