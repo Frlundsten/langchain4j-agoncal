@@ -12,6 +12,7 @@ import dev.langchain4j.store.memory.chat.ChatMemoryStore;
 import org.fredrikl.parser.pdf.ParseByLangchain4j;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -22,8 +23,8 @@ docker run -d --gpus all -v ollama:/root/.ollama -p 11434:11434 --name ollama ol
 public class MusicianAssistant {
     public static void main(String[] args) {
         ParseByLangchain4j parser = new ParseByLangchain4j();
-        Document loadedDocument = parser.loadFile();
-        parser.split(loadedDocument);
+        Optional<Document> loadedDocument = parser.loadFile();
+        loadedDocument.ifPresent(parser::split);
 
 
 //        PracticalChatModel chatModel = new PracticalChatModel();
